@@ -1,0 +1,11 @@
+# Tea ☕ - Private AI Journaling
+# https://tea.app
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /chat/
+Disallow: /settings
+Disallow: /onboarding
+
+Sitemap: https://tea.app/sitemap.xml
