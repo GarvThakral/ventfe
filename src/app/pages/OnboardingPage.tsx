@@ -183,7 +183,7 @@ export function OnboardingPage() {
                 <div className="text-center mb-8">
                   <div className="text-6xl mb-4">{selectedEmoji}</div>
                   <h2 className="text-3xl font-bold mb-2">Your first chat is ready</h2>
-                  <p className="text-muted-foreground text-lg">Time to spill the tea about {personName}</p>
+                  <p className="text-muted-foreground text-lg">Time to let it out about {personName}</p>
                 </div>
 
                 <CardContent className="space-y-6">

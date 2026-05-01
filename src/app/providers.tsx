@@ -9,11 +9,11 @@ import { Toaster } from "@/app/components/ui/sonner";
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const onError = (event: ErrorEvent) => {
-      console.error("[Tea] window error:", event.error || event.message);
+      console.error("[Vent] window error:", event.error || event.message);
     };
 
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error("[Tea] unhandled rejection:", event.reason);
+      console.error("[Vent] unhandled rejection:", event.reason);
     };
 
     window.addEventListener("error", onError);
@@ -27,7 +27,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light" storageKey="tea-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vent-theme">
         {children}
         <Toaster position="top-center" richColors />
       </ThemeProvider>

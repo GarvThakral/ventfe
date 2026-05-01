@@ -11,7 +11,7 @@ export function LandingPage() {
     <div className="min-h-screen">
       <SEOHead
         title="Vent 🌬️ — Private AI Journaling for Mental Wellbeing"
-        description="A place to spill your tea. Your private AI journal for venting about people in your life. Talk freely, be heard deeply, and breathe easier."
+        description="A place to let it out. Your private AI journal for venting about people in your life. Talk freely, be heard deeply, and breathe easier."
       />
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -42,7 +42,7 @@ export function LandingPage() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-                A place to spill your tea 🫖
+                A place to let it out 🌬️
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Your private AI journal for venting about the people in your life. 
@@ -191,13 +191,13 @@ export function LandingPage() {
                 <a href="#terms" className="text-muted-foreground hover:text-foreground transition-colors">
                   Terms
                 </a>
-                <a href="mailto:hello@tea.app" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a href="mailto:hello@vent.app" className="text-muted-foreground hover:text-foreground transition-colors">
                   Contact
                 </a>
               </nav>
               <div className="flex gap-4">
                 <a
-                  href="https://twitter.com/teajournal"
+                  href="https://twitter.com/ventapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"

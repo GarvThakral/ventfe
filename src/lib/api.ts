@@ -67,7 +67,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
       typeof data === "object" && data && "detail" in data
         ? String((data as { detail: string }).detail)
         : `Request failed with status ${response.status}`;
-    console.error("[Tea] API request failed", {
+    console.error("[Vent] API request failed", {
       path,
       status: response.status,
       message,

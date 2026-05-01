@@ -23,9 +23,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('[Tea] Error boundary caught:', error, errorInfo.componentStack);
+    console.error('[Vent] Error boundary caught:', error, errorInfo.componentStack);
     if (typeof window !== 'undefined' && (window as Window & { ventDebug?: unknown }).ventDebug) {
-      console.error('[Tea] debug payload:', (window as Window & { ventDebug?: unknown }).ventDebug);
+      console.error('[Vent] debug payload:', (window as Window & { ventDebug?: unknown }).ventDebug);
     }
   }
 
