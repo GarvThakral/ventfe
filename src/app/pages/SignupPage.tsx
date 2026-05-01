@@ -75,8 +75,8 @@ export function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-muted/30 to-background">
       <SEOHead
-        title="Sign Up — Tea ☕"
-        description="Create your free Tea account and start your private journaling journey today."
+        title="Sign Up — Vent 🌬️"
+        description="Create your free Vent account and start your private journaling journey today."
       />
       <div className="absolute top-4 right-4">
         <ThemeToggle />
@@ -84,8 +84,8 @@ export function SignupPage() {
 
       <div className="absolute top-4 left-4">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl">☕</span>
-          <span className="font-semibold text-xl">Tea</span>
+          <span className="text-2xl">🌬️</span>
+          <span className="font-semibold text-xl">Vent</span>
         </Link>
       </div>
 

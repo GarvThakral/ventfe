@@ -1,6 +1,7 @@
 export interface User {
   id: string;
   email?: string | null;
+  is_premium?: boolean;
 }
 
 export interface AuthResponse {
@@ -16,6 +17,8 @@ export interface Chat {
   user_id?: string | null;
   name: string;
   emoji: string;
+  image_url?: string | null;
+  personality?: string | null;
   created_at?: string | null;
   last_message?: string | null;
   last_message_at?: string | null;

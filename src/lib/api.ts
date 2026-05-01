@@ -126,19 +126,22 @@ export const api = {
   deleteAccount() {
     return request<{ message: string }>("/api/auth/me", { method: "DELETE" });
   },
+  togglePremium() {
+    return request<{ is_premium: boolean }>("/api/auth/toggle-premium", { method: "POST" });
+  },
   listChats() {
     return request<Chat[]>("/api/chats");
   },
   getChat(chatId: string) {
     return request<Chat>(`/api/chats/${chatId}`);
   },
-  createChat(name: string, emoji: string) {
+  createChat(name: string, emoji: string, image_url?: string, personality?: string) {
     return request<Chat>("/api/chats", {
       method: "POST",
-      body: JSON.stringify({ name, emoji }),
+      body: JSON.stringify({ name, emoji, image_url, personality }),
     });
   },
-  updateChat(chatId: string, payload: { name?: string; emoji?: string }) {
+  updateChat(chatId: string, payload: { name?: string; emoji?: string; image_url?: string | null; personality?: string | null }) {
     return request<Chat>(`/api/chats/${chatId}`, {
       method: "PATCH",
       body: JSON.stringify(payload),
@@ -175,5 +178,16 @@ export const api = {
   },
   getMeditations() {
     return request<MeditationScript[]>("/api/wellness/meditations", { auth: false });
+  },
+  getAllMemories() {
+    return request<Array<{
+      chat_id: string;
+      chat_name: string;
+      chat_emoji: string;
+      memories: Array<{ id: string; content: string; created_at: string | null }>;
+    }>>("/api/chats/all-memories");
+  },
+  recommendPersonality(chatId: string) {
+    return request<{ recommendation: string }>(`/api/chats/${chatId}/recommend-personality`);
   },
 };

@@ -61,8 +61,8 @@ export function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-muted/30 to-background">
       <SEOHead
-        title="Log In — Tea ☕"
-        description="Sign in to your Tea account and continue your private journaling journey."
+        title="Log In — Vent 🌬️"
+        description="Sign in to your Vent account and continue your private journaling journey."
       />
       <div className="absolute top-4 right-4">
         <ThemeToggle />
@@ -70,8 +70,8 @@ export function LoginPage() {
 
       <div className="absolute top-4 left-4">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl">☕</span>
-          <span className="font-semibold text-xl">Tea</span>
+          <span className="text-2xl">🌬️</span>
+          <span className="font-semibold text-xl">Vent</span>
         </Link>
       </div>
 

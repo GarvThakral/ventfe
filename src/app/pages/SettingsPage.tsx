@@ -27,7 +27,7 @@ export function SettingsPage() {
   const [isWorking, setIsWorking] = useState(false);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem('tea-email-digest');
+    const stored = window.localStorage.getItem('vent-email-digest');
     setEmailDigest(stored !== 'false');
   }, []);
 
@@ -105,7 +105,7 @@ export function SettingsPage() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'tea-export.json';
+      link.download = 'vent-export.json';
       link.click();
       URL.revokeObjectURL(url);
       toast.success('Data export ready');
@@ -141,14 +141,14 @@ export function SettingsPage() {
 
   function handleEmailDigestChange(nextValue: boolean) {
     setEmailDigest(nextValue);
-    window.localStorage.setItem('tea-email-digest', String(nextValue));
+    window.localStorage.setItem('vent-email-digest', String(nextValue));
   }
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       <SEOHead
-        title="Settings — Tea ☕"
-        description="Manage your Tea account settings, notifications, privacy, and subscription."
+        title="Settings — Vent 🌬️"
+        description="Manage your Vent account settings, notifications, privacy, and subscription."
       />
       <header className="border-b bg-card/50 backdrop-blur-sm px-4 py-3 sticky top-0 z-10">
         <div className="container mx-auto max-w-4xl flex items-center gap-4">
@@ -297,14 +297,41 @@ export function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Subscription</CardTitle>
-            <CardDescription>Manage your Tea plan</CardDescription>
+            <CardDescription>Manage your Vent plan</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="p-4 rounded-lg bg-muted/50">
-              <p className="font-medium">Free Plan</p>
-              <p className="text-sm text-muted-foreground">
-                This starter ships without billing. Add Stripe or your preferred provider when you need paid tiers.
+          <CardContent className="space-y-4">
+            <div className={`p-4 rounded-lg ${user?.is_premium ? 'bg-primary/5 border border-primary/20' : 'bg-muted/50'}`}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-lg">{user?.is_premium ? '✨ Premium Plan' : 'Free Plan'}</p>
+                  {user?.is_premium && (
+                    <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">ACTIVE</span>
+                  )}
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                {user?.is_premium
+                  ? 'You have access to all characters, AI personality recommendations, and custom tones.'
+                  : 'Upgrade to unlock all AI characters, personality recommendations, and custom tones.'}
               </p>
+              <Button
+                variant={user?.is_premium ? 'outline' : 'default'}
+                onClick={async () => {
+                  setIsWorking(true);
+                  try {
+                    const result = await api.togglePremium();
+                    toast.success(result.is_premium ? 'Welcome to Premium! ✨' : 'Downgraded to Free plan');
+                    window.location.reload();
+                  } catch (error) {
+                    toast.error('Unable to update subscription');
+                  } finally {
+                    setIsWorking(false);
+                  }
+                }}
+                disabled={isWorking}
+              >
+                {user?.is_premium ? 'Downgrade to Free' : '⚡ Upgrade to Premium — $9.99/mo'}
+              </Button>
             </div>
           </CardContent>
         </Card>

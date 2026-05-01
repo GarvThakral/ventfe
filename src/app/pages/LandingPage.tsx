@@ -10,15 +10,15 @@ export function LandingPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Tea ☕ — Private AI Journaling for Mental Wellbeing"
+        title="Vent 🌬️ — Private AI Journaling for Mental Wellbeing"
         description="A place to spill your tea. Your private AI journal for venting about people in your life. Talk freely, be heard deeply, and breathe easier."
       />
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">☕</span>
-            <span className="font-semibold text-xl">Tea</span>
+            <span className="text-2xl">🌬️</span>
+            <span className="font-semibold text-xl">Vent</span>
           </Link>
           <div className="flex items-center gap-4">
             <ThemeToggle />
@@ -66,7 +66,7 @@ export function LandingPage() {
         <section className="py-20 px-4 bg-muted/30">
           <div className="container mx-auto max-w-6xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Why people love Tea
+              Why people love Vent
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard
@@ -181,8 +181,8 @@ export function LandingPage() {
           <div className="container mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">☕</span>
-                <span className="font-semibold text-xl">Tea</span>
+                <span className="text-2xl">🌬️</span>
+                <span className="font-semibold text-xl">Vent</span>
               </div>
               <nav className="flex flex-wrap gap-6 justify-center">
                 <a href="#privacy" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -208,7 +208,7 @@ export function LandingPage() {
               </div>
             </div>
             <div className="text-center mt-8 text-sm text-muted-foreground">
-              © 2026 Tea. Made with care for your mental wellbeing.
+              © 2026 Vent. Made with care for your mental wellbeing.
             </div>
           </div>
         </footer>

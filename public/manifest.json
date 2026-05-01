@@ -1,7 +1,7 @@
 {
-  "name": "Tea - Private AI Journaling",
-  "short_name": "Tea",
-  "description": "A place to spill your tea. Your private AI journal for venting about people in your life.",
+  "name": "Vent - Private AI Journaling",
+  "short_name": "Vent",
+  "description": "A place to let it out. Your private AI journal for venting about people in your life.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fdfcfb",

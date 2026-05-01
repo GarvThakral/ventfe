@@ -7,7 +7,7 @@ import { SEOHead } from '../components/SEOHead';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { X } from 'lucide-react';
+import { X, Volume2, VolumeX, Music } from 'lucide-react';
 import { motion } from 'motion/react';
 import { toast } from 'sonner';
 
@@ -22,6 +22,34 @@ export function OverwhelmedPage() {
   const [isBreathing, setIsBreathing] = useState(false);
   const [phase, setPhase] = useState<BreathingPhase>('inhale');
   const [countdown, setCountdown] = useState(4);
+  const [activeTab, setActiveTab] = useState('breathing');
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [audio] = useState(() => typeof Audio !== 'undefined' ? new Audio('/monume-relaxing-relaxing-music-498056.mp3') : null);
+
+  useEffect(() => {
+    if (!audio) return;
+    audio.loop = true;
+    
+    if (isPlayingMusic && (activeTab === 'grounding' || activeTab === 'meditation')) {
+      audio.play().catch(e => console.error("Audio playback failed:", e));
+    } else {
+      audio.pause();
+    }
+
+    return () => {
+      audio.pause();
+    };
+  }, [isPlayingMusic, activeTab, audio]);
+
+  // Stop music when leaving the page
+  useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    };
+  }, [audio]);
 
   useEffect(() => {
     void Promise.all([
@@ -111,8 +139,8 @@ export function OverwhelmedPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 relative">
       <SEOHead
-        title="Breathing & Calming Tools — Tea ☕"
-        description="Take a moment to breathe and ground yourself with Tea's calming exercises and meditation tools."
+        title="Breathing & Calming Tools — Vent 🌬️"
+        description="Take a moment to breathe and ground yourself with Vent's calming exercises and meditation tools."
       />
       <Button
         variant="ghost"
@@ -130,7 +158,7 @@ export function OverwhelmedPage() {
           <p className="text-lg text-muted-foreground">You do not need to solve everything before you calm your body down.</p>
         </div>
 
-        <Tabs defaultValue="breathing" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="breathing">Breathing</TabsTrigger>
             <TabsTrigger value="grounding">Grounding</TabsTrigger>
@@ -196,6 +224,17 @@ export function OverwhelmedPage() {
           </TabsContent>
 
           <TabsContent value="grounding">
+            <div className="flex justify-end mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 rounded-full"
+                onClick={() => setIsPlayingMusic(!isPlayingMusic)}
+              >
+                {isPlayingMusic ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                {isPlayingMusic ? 'Music On' : 'Music Off'}
+              </Button>
+            </div>
             <Card className="border-0 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-8 md:p-12">
                 <h2 className="text-2xl font-semibold text-center mb-3">{grounding?.title ?? 'Loading...'}</h2>
@@ -219,6 +258,17 @@ export function OverwhelmedPage() {
           </TabsContent>
 
           <TabsContent value="meditation">
+            <div className="flex justify-end mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 rounded-full"
+                onClick={() => setIsPlayingMusic(!isPlayingMusic)}
+              >
+                {isPlayingMusic ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                {isPlayingMusic ? 'Music On' : 'Music Off'}
+              </Button>
+            </div>
             <Card className="border-0 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-8 md:p-12 space-y-4">
                 {meditations.map((meditation) => (

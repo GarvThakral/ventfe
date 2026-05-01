@@ -9,14 +9,13 @@ export function OverwhelmedButton() {
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-      className="hidden md:block fixed bottom-6 right-6 z-40"
+      className="fixed bottom-8 right-8 z-40"
     >
       <Link to="/overwhelmed">
         <Button
-          size="lg"
-          className="rounded-full shadow-lg bg-secondary hover:bg-secondary/90 text-secondary-foreground px-6 gap-2"
+          className="rounded-full shadow-2xl bg-secondary hover:bg-secondary/90 text-secondary-foreground h-16 px-8 text-lg font-semibold gap-3 border-2 border-white/20 backdrop-blur-sm"
         >
-          <Wind className="w-5 h-5" />
+          <Wind className="w-7 h-7" />
           I'm Overwhelmed 💙
         </Button>
       </Link>

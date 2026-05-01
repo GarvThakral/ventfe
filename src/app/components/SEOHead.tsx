@@ -8,7 +8,7 @@ interface SEOHeadProps {
 }
 
 export function SEOHead({
-  title = 'Tea ☕ — Private AI Journaling',
+  title = 'Vent 🌬️ — Private AI Journaling',
   description = 'A place to spill your tea. Your private AI journal for venting about people in your life. Talk freely, be heard deeply, and breathe easier.',
   ogImage = '/og-image.svg',
   ogUrl,

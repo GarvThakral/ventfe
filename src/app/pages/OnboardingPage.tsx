@@ -69,10 +69,16 @@ export function OnboardingPage() {
               transition={{ duration: 0.3 }}
             >
               <Card className="p-8">
-                <div className="text-center mb-8">
-                  <div className="text-6xl mb-4">☕</div>
-                  <h1 className="text-3xl font-bold mb-2">Welcome to Tea</h1>
-                  <p className="text-muted-foreground text-lg">Who&apos;s been on your mind lately?</p>
+                <div className="text-center mb-10">
+                  <div className="flex justify-center mb-[-20px] relative z-20">
+                    <img 
+                      src="/mascot.png" 
+                      alt="Vent Mascot" 
+                      className="w-32 h-32 object-contain "
+                    />
+                  </div>
+                  <h1 className="text-4xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500 relative z-10 pt-2">Welcome to Vent</h1>
+                  <p className="text-muted-foreground text-xl">Who&apos;s been on your mind lately?</p>
                 </div>
 
                 <CardContent className="space-y-6">
@@ -143,7 +149,7 @@ export function OnboardingPage() {
                     <FeaturePoint
                       icon={<Brain className="w-5 h-5" />}
                       title="Smart memory"
-                      description="Tea stores short reflective memories so replies stay contextual without flooding the prompt."
+                      description="Vent stores short reflective memories so replies stay contextual without flooding the prompt."
                     />
                     <FeaturePoint
                       icon={<Sparkles className="w-5 h-5" />}
@@ -194,7 +200,7 @@ export function OnboardingPage() {
                       </li>
                       <li className="flex gap-2">
                         <span className="text-primary">•</span>
-                        Tea will begin storing memories after the assistant notices a pattern worth keeping.
+                        Vent will begin storing memories after the assistant notices a pattern worth keeping.
                       </li>
                       <li className="flex gap-2">
                         <span className="text-primary">•</span>

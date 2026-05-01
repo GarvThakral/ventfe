@@ -16,8 +16,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../components/ui/dropdown-menu';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Menu, MessageSquare, MoreHorizontal, Pencil, Plus, Settings, Trash2, User, LogOut } from 'lucide-react';
+import { Menu, MessageSquare, MoreHorizontal, Pencil, Plus, Settings, Trash2, User, LogOut, Upload, Image as ImageIcon, TreePine } from 'lucide-react';
 import { toast } from 'sonner';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 const EMOJIS = ['😤', '😢', '😕', '😠', '🤔', '🙄', '😰', '🤯', '😑', '😶', '🫠', '😬'];
 
@@ -30,9 +31,12 @@ export function DashboardPage() {
   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
   const [draftName, setDraftName] = useState('');
   const [draftEmoji, setDraftEmoji] = useState('😤');
+  const [draftImageUrl, setDraftImageUrl] = useState('');
+  const [draftPersonality, setDraftPersonality] = useState('');
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -66,6 +70,8 @@ export function DashboardPage() {
     setEditingChatId(null);
     setDraftName('');
     setDraftEmoji('😤');
+    setDraftImageUrl('');
+    setDraftPersonality('');
     setShowDialog(true);
   }
 
@@ -74,6 +80,8 @@ export function DashboardPage() {
     setEditingChatId(chat.id);
     setDraftName(chat.name);
     setDraftEmoji(chat.emoji);
+    setDraftImageUrl(chat.image_url || '');
+    setDraftPersonality(chat.personality || '');
     setShowDialog(true);
   }
 
@@ -85,13 +93,15 @@ export function DashboardPage() {
     setIsSaving(true);
     try {
       if (dialogMode === 'create') {
-        const createdChat = await api.createChat(draftName.trim(), draftEmoji);
+        const createdChat = await api.createChat(draftName.trim(), draftEmoji, draftImageUrl.trim() || undefined, draftPersonality.trim() || undefined);
         setChats((prev) => [createdChat, ...prev]);
         toast.success(`Added ${createdChat.name}`);
       } else if (editingChatId) {
         const updatedChat = await api.updateChat(editingChatId, {
           name: draftName.trim(),
           emoji: draftEmoji,
+          image_url: draftImageUrl.trim() || null,
+          personality: draftPersonality.trim() || null,
         });
         setChats((prev) => prev.map((chat) => (chat.id === updatedChat.id ? { ...chat, ...updatedChat } : chat)));
         toast.success(`Updated ${updatedChat.name}`);
@@ -115,6 +125,27 @@ export function DashboardPage() {
     }
   }
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be smaller than 5MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setDraftImageUrl(url);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Upload failed');
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
   async function handleLogout() {
     try {
       await api.logout();
@@ -133,15 +164,15 @@ export function DashboardPage() {
   return (
     <div className="h-screen flex flex-col md:flex-row overflow-hidden bg-background">
       <SEOHead
-        title="Dashboard — Tea ☕"
+        title="Dashboard — Vent 🌬️"
         description="Manage your private person chats and journal entries."
       />
-      <aside className={`${showMobileMenu ? 'block' : 'hidden'} md:block w-full md:w-80 border-r flex flex-col bg-card`}>
+      <aside className={`${showMobileMenu ? 'block' : 'hidden'} md:block w-full md:w-80 border-r flex flex-col bg-gradient-to-b from-card to-secondary/5`}>
         <div className="p-4 border-b space-y-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
-              <span className="text-2xl">☕</span>
-              <span className="font-semibold text-xl">Tea</span>
+              <span className="text-2xl">🌬️</span>
+              <span className="font-semibold text-xl">Vent</span>
             </Link>
             <div className="flex items-center gap-2">
               <ThemeToggle />
@@ -174,6 +205,11 @@ export function DashboardPage() {
                 Add Person
               </Button>
             </DialogTrigger>
+
+            <Button variant="outline" className="w-full gap-2" size="lg" onClick={() => navigate('/memory-tree')}>
+              <TreePine className="w-5 h-5" />
+              Memory Tree
+            </Button>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>{dialogMode === 'create' ? 'Add a new person' : 'Edit person'}</DialogTitle>
@@ -190,23 +226,69 @@ export function DashboardPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Pick an emoji</Label>
-                  <div className="grid grid-cols-6 gap-2">
-                    {EMOJIS.map((emoji) => (
-                      <button
-                        key={emoji}
-                        type="button"
-                        onClick={() => setDraftEmoji(emoji)}
-                        className={`text-2xl p-2 rounded-lg transition-all hover:scale-110 ${
-                          draftEmoji === emoji
-                            ? 'bg-primary/20 ring-2 ring-primary'
-                            : 'bg-muted/50 hover:bg-muted'
-                        }`}
-                      >
-                        {emoji}
-                      </button>
-                    ))}
+                  <Label>Picture (optional)</Label>
+                  <div className="flex gap-4 items-start">
+                    {draftImageUrl ? (
+                      <div className="relative group">
+                        <img 
+                          src={draftImageUrl} 
+                          alt="Preview" 
+                          className="w-20 h-20 rounded-xl object-cover border border-border shadow-sm" 
+                        />
+                        <button 
+                          onClick={() => setDraftImageUrl('')}
+                          className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Plus className="w-3 h-3 rotate-45" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="w-20 h-20 rounded-xl bg-muted flex items-center justify-center border-2 border-dashed border-border text-muted-foreground">
+                        <ImageIcon className="w-8 h-8 opacity-20" />
+                      </div>
+                    )}
+                    <div className="flex-1 space-y-2">
+                      <div className="relative">
+                        <input
+                          type="file"
+                          id="file-upload"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          disabled={isUploading}
+                        />
+                        <Button 
+                          variant="outline" 
+                          className="w-full h-10 gap-2"
+                          onClick={() => document.getElementById('file-upload')?.click()}
+                          disabled={isUploading}
+                        >
+                          <Upload className="w-4 h-4" />
+                          {isUploading ? 'Uploading...' : 'Upload Image'}
+                        </Button>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground text-center">
+                        Or paste a URL below
+                      </p>
+                      <Input
+                        id="personImage"
+                        placeholder="https://example.com/photo.jpg"
+                        value={draftImageUrl}
+                        onChange={(e) => setDraftImageUrl(e.target.value)}
+                        className="bg-input-background text-xs h-8"
+                      />
+                    </div>
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="personPersonality">AI Personality / Tone (optional)</Label>
+                  <textarea
+                    id="personPersonality"
+                    placeholder="e.g., Be blunt and logical, or Be warm and validating..."
+                    value={draftPersonality}
+                    onChange={(e) => setDraftPersonality(e.target.value)}
+                    className="w-full min-h-[80px] rounded-md border border-input bg-input-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
                 </div>
                 <Button onClick={handleSaveChat} disabled={!draftName.trim() || isSaving} className="w-full">
                   {isSaving ? 'Saving...' : dialogMode === 'create' ? 'Add Person' : 'Save Changes'}
@@ -228,10 +310,14 @@ export function DashboardPage() {
           ) : (
             <div className="space-y-2">
               {chats.map((chat) => (
-                <div key={chat.id} className="group rounded-xl hover:bg-accent/50">
+                <div key={chat.id} className="group rounded-xl hover:bg-accent/50 transition-all">
                   <div className="flex items-start gap-2 p-3">
-                    <button onClick={() => handleChatClick(chat.id)} className="flex flex-1 items-start gap-3 text-left">
-                      <div className="text-3xl">{chat.emoji}</div>
+                    <button onClick={() => handleChatClick(chat.id)} className="flex flex-1 items-start gap-3 text-left overflow-hidden">
+                      {chat.image_url ? (
+                        <img src={chat.image_url} alt={chat.name} className="w-12 h-12 rounded-full object-cover shadow-sm border border-border" />
+                      ) : (
+                        <div className="text-3xl w-12 h-12 flex items-center justify-center bg-muted/50 rounded-full">{chat.emoji}</div>
+                      )}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1 gap-2">
                           <h3 className="font-semibold truncate">{chat.name}</h3>
@@ -272,7 +358,7 @@ export function DashboardPage() {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <main className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-background via-background to-primary/5">
         <Button
           variant="ghost"
           size="icon"
@@ -281,14 +367,23 @@ export function DashboardPage() {
         >
           <Menu className="w-6 h-6" />
         </Button>
-
-        <div className="max-w-md">
-          <div className="text-6xl mb-6">🫖</div>
-          <h2 className="text-3xl font-bold mb-3">Who do you need to vent about today?</h2>
-          <p className="text-muted-foreground mb-6">
-            Select a chat from the sidebar or add someone new to get started.
+        
+        <div className="max-w-md animate-in fade-in zoom-in duration-500">
+          {/* Mascot sitting above the text, paw resting on it */}
+          <div className="flex justify-center mb-[-24px] relative z-20">
+            <img 
+              src="/mascot.png" 
+              alt="Vent Mascot" 
+              className="w-40 h-40 object-contain "
+            />
+          </div>
+          <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500 relative z-10 pt-2">
+            Who do you need to vent about today?
+          </h2>
+          <p className="text-muted-foreground text-lg mb-8 max-w-sm mx-auto">
+            Select a person from the sidebar or add someone new to clear your mind.
           </p>
-          <Button size="lg" onClick={openCreateDialog}>
+          <Button size="lg" onClick={openCreateDialog} className="shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
             <Plus className="w-5 h-5 mr-2" />
             {chats.length > 0 ? 'Add Another Person' : 'Add Your First Person'}
           </Button>
