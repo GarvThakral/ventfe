@@ -237,7 +237,7 @@ export function ChatPage() {
   const isLoading = isUserLoading || isLoadingChat;
 
   return (
-    <div className="h-screen flex flex-col relative overflow-hidden">
+    <div className="h-[100dvh] flex flex-col relative overflow-hidden">
       {/* Background Image Layer */}
       {chat?.image_url && (
         <div className="absolute inset-0 z-0">
@@ -268,7 +268,7 @@ export function ChatPage() {
             {chat?.image_url ? (
               <img src={chat.image_url} alt={chat.name} className="w-10 h-10 rounded-full object-cover border border-border shadow-sm" />
             ) : (
-              <span className="text-3xl">{chat?.emoji ?? '☕'}</span>
+              <span className="text-3xl">{chat?.emoji ?? '🌬️'}</span>
             )}
             <div>
               <h1 className="font-semibold">{chat?.name ?? 'Loading...'}</h1>
@@ -287,7 +287,7 @@ export function ChatPage() {
               <SheetHeader>
                 <SheetTitle>Chat Settings</SheetTitle>
               </SheetHeader>
-              <div className="mt-6 space-y-4">
+              <div className="mt-6 space-y-4 overflow-y-auto max-h-[85vh] pr-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Name</label>
                   <input
@@ -436,7 +436,7 @@ export function ChatPage() {
                 What I remember
               </SheetTitle>
             </SheetHeader>
-            <div className="mt-6 space-y-4">
+            <div className="mt-6 space-y-4 overflow-y-auto max-h-[85vh]">
               {memories.length === 0 ? (
                 <div className="text-center py-12">
                   <Brain className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
@@ -475,7 +475,7 @@ export function ChatPage() {
         ) : messages.length === 0 ? (
           <div className="h-full flex items-center justify-center text-center px-6">
             <div className="max-w-sm">
-              <div className="text-6xl mb-6 bounce-slow">{chat?.emoji ?? '☕'}</div>
+              <div className="text-6xl mb-6 bounce-slow">{chat?.emoji ?? '🌬️'}</div>
               <h2 className="text-2xl font-semibold mb-3">Venting about {chat?.name}?</h2>
               <p className="text-muted-foreground mb-6">
                 Vent is here to listen. Tell me what happened with {chat?.name} today, or how they're making you feel.
@@ -514,7 +514,7 @@ export function ChatPage() {
                     </Avatar>
                   )}
                   <div
-                    className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${
+                    className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${
                       isUser ? 'bg-primary text-primary-foreground' : 'glass border-none'
                     } ${message.failed ? 'border-destructive' : ''}`}
                   >
@@ -568,8 +568,8 @@ export function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t bg-card/50 backdrop-blur-sm p-4 space-y-3">
-        <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="border-t bg-card/50 backdrop-blur-sm p-4 pb-12 sm:pb-4 space-y-3">
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {MOODS.map((mood) => {
             const value = `${mood.emoji} ${mood.label}`;
             return (
@@ -589,7 +589,7 @@ export function ChatPage() {
           })}
         </div>
 
-        <div className="flex gap-3 items-end">
+        <div className="flex gap-3 items-end mb-2">
           <Textarea
             placeholder="What happened?"
             value={input}
@@ -597,14 +597,15 @@ export function ChatPage() {
             onKeyDown={handleKeyDown}
             className="min-h-[60px] max-h-40 resize-none bg-input-background"
           />
-          <Button size="icon" className="h-[60px] w-[60px]" onClick={() => void handleSend()} disabled={!input.trim() || isSending}>
+          <Button size="icon" className="h-[60px] w-[60px] shrink-0" onClick={() => void handleSend()} disabled={!input.trim() || isSending}>
             <Send className="w-5 h-5" />
           </Button>
         </div>
       </div>
 
-      <OverwhelmedButton />
-      <MobileNav />
+      <div className="md:hidden">
+        <OverwhelmedButton />
+      </div>
       <PricingModal isOpen={showPricing} onOpenChange={setShowPricing} />
       </div>
     </div>

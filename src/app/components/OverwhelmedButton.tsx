@@ -13,10 +13,10 @@ export function OverwhelmedButton() {
     >
       <Link to="/overwhelmed">
         <Button
-          className="rounded-full shadow-2xl bg-secondary hover:bg-secondary/90 text-secondary-foreground h-16 px-8 text-lg font-semibold gap-3 border-2 border-white/20 backdrop-blur-sm"
+          className="rounded-full shadow-2xl bg-secondary hover:bg-secondary/90 text-secondary-foreground h-12 px-4 text-sm sm:h-16 sm:px-8 sm:text-lg font-semibold gap-2 sm:gap-3 border-2 border-white/20 backdrop-blur-sm"
         >
-          <Wind className="w-7 h-7" />
-          I'm Overwhelmed 💙
+          <Wind className="w-5 h-5 sm:w-7 sm:h-7" />
+          <span className="whitespace-nowrap">I'm Overwhelmed 💙</span>
         </Button>
       </Link>
     </motion.div>
